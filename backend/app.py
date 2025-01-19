@@ -1,19 +1,20 @@
 from flask import Flask
-from services.auricle import auricleService
-from services.user import userService
-from flask_socketio import SocketIO
+from services.auricle import auricle_service
+from flask_cors import CORS
 
 app = Flask(__name__)
-socketio = SocketIO(app)
 
-# Register the blueprints
-app.register_blueprint(auricleService, url_prefix='/auricle')
-app.register_blueprint(userService, url_prefix='/users')
+CORS(app)
+CORS(app, origins=["http://localhost:5173/"])
+
+app.config['MAX_CONTENT_LENGTH'] = 26836840000000
+app.config['MAX_FORM_MEMORY_SIZE'] = 26836840000000
+
+app.register_blueprint(auricle_service, url_prefix='/auricle')
 
 @app.route('/')
 def hello():
     return 'Hello, World!'
 
-if __name__ == "__main__":
-    socketio.run(app, debug=True)
+if __name__ == "main":
     app.run(debug=True)
